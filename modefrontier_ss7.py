@@ -1,9 +1,11 @@
 import csv
+import numpy as np
 
 
 class List_of_Str(list[str]):
     def index_startswith(self, value: str) -> int:
         return [v.startswith(value) for v in self].index(True)
+
 
 class ModeFrontier_SS7:
     source: List_of_Str
@@ -39,14 +41,39 @@ class ModeFrontier_SS7:
     def input(self, name: str) -> None:
         with open(f"{name}.csv", "w", encoding="cp932") as fp:
             csv.writer(fp).writerows([
-                [
+                "Name",
+                "Label",
+                "Type",
+                "Default value",
+                "Unit of measure",
+                "Expression",
+                "Lower bound",
+                "Upper bound",
+                "Central value",
+                "Delta value",
+                "Base",
+                "Step",
+                "Format",
+                "Tolerance",
+                "Description",
+            ] + [
+                np.array([
                     f"{name}[{i}]",
-                    "Var - Discrete Ordered",
+                    "",
+                    "Var - Discrete ordered",
                     v["choices"].index(v["default"]),
-                    len(v["choices"]),
+                    "",
+                    "",
                     0,
+                    len(v["choices"]) - 1,
+                    "",
+                    "",
                     len(v["choices"]),
-                ] for i, v in enumerate(self.members[name])
+                    1,
+                    0,
+                    0,
+                    "",
+                ], dtype=str).tolist() for i, v in enumerate(self.members[name])
             ])
 
     def print(self) -> None:
